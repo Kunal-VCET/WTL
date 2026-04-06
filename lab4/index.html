@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AussieJungle | Australian Vegetation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #fdfdfb; font-family: 'Segoe UI', sans-serif; }
+        
+    
+        .navbar-dark { background-color: #212529; border-bottom: 3px solid #556b2f; }
+        .navbar-brand { font-weight: 700; letter-spacing: 1px; }
+
+       
+        .gallery-card {
+            border: none;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-radius: 12px;
+        }
+        .gallery-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+        }
+        .gallery-card img {
+            height: 280px;
+            object-fit: cover;
+        }
+
+
+        #detail-view { display: none; }
+        .detail-img {
+            max-height: 60vh;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .botanical-tag {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #556b2f;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        footer {
+            background-color: #f1f1f1;
+            padding: 25px 0;
+            margin-top: 60px;
+            border-top: 1px solid #ddd;
+        }
+
+
+        .loader {
+            display: none;
+            width: 45px;
+            height: 45px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #556b2f;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 25px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow">
+        <div class="container">
+            <a class="navbar-brand" href="#" onclick="showGallery()">AussieJungle</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#" onclick="showGallery()">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Flora Index</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5" id="gallery-view">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold" style="color: #2d3e1e;">Native Vegetation</h1>
+            <p class="text-muted lead">Explore the unique flora of the Australian continent</p>
+        </div>
+        <div class="row g-4" id="gallery-grid">
+            </div>
+    </main>
+
+    <section class="container my-5" id="detail-view">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <button class="btn btn-outline-dark mb-4" onclick="showGallery()">← Return to Gallery</button>
+                <div class="bg-white p-4 p-md-5 rounded shadow-sm">
+                    <div class="row align-items-center">
+                        <div class="col-md-5 mb-4 mb-md-0">
+                            <img id="main-img" src="" class="img-fluid detail-img w-100" alt="Plant">
+                        </div>
+                        <div class="col-md-7">
+                            <span class="botanical-tag">Native Species</span>
+                            <h2 id="plant-name" class="fw-bold display-6 mb-3"></h2>
+                            <hr>
+                            <div id="loader" class="loader"></div>
+                            <p id="wiki-text" class="text-secondary" style="line-height: 1.7;"></p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center">
+        <div class="container text-muted small">
+            © 2026 
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+       
+        const plants = [
+            { name: "Golden Wattle", wiki: "Acacia_pycnantha", img: "https://particle.scitech.org.au/wp-content/uploads/2017/07/iStock-120876548.jpg" },
+            { name: "Waratah", wiki: "Telopea_speciosissima", img: "https://www.yates.com.au/media/plants/natives/pr-tn-waratah-closeup.jpg" },
+            { name: "Ghost Gum", wiki: "Corymbia_aparerinja", img: "https://assets.nationbuilder.com/environskimberley/pages/139/attachments/original/1512575939/Cable_Beach_Ghost_Gum_with_blue_sky-1.jpg?1512575939" },
+            { name: "Banksia", wiki: "Banksia", img: "https://rewildperth.com.au/rwwp/wp-content/uploads/2020/08/Banksia-prionotes-1-Bryony-Fremlin.jpg" },
+            { name: "Bottle Brush", wiki: "Callistemon", img: "https://canterburyfarmsnursery.com/wp-content/uploads/2016/05/Callistemon-1-600x330.jpg" },
+            { name: "Sturt's Desert Pea", wiki: "Swainsona_formosa", img: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Sturts_desert_pea.jpg" }
+        ];
+
+        function loadGallery() {
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = plants.map(p => `
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card gallery-card h-100" onclick="fetchWiki('${p.name}', '${p.wiki}', '${p.img}')">
+                        <img src="${p.img}" class="card-img-top" alt="${p.name}">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold mb-1">${p.name}</h5>
+                            <p class="small text-success">Native Australian Flora</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function fetchWiki(name, title, img) {
+            document.getElementById('gallery-view').style.display = 'none';
+            document.getElementById('detail-view').style.display = 'block';
+            document.getElementById('plant-name').innerText = name;
+            document.getElementById('main-img').src = img;
+            document.getElementById('wiki-text').innerText = "";
+            document.getElementById('loader').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            try {
+              
+                const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${title}`);
+                const data = await response.json();
+                
+             
+                if (data.extract) {
+                    document.getElementById('wiki-text').innerText = data.extract;
+                } else {
+                    document.getElementById('wiki-text').innerText = "Detailed botanical information is currently unavailable for this species.";
+                }
+            } catch (err) {
+                document.getElementById('wiki-text').innerText = "Could not connect to the botanical database. Please check your internet connection.";
+            } finally {
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
+
+        function showGallery() {
+            document.getElementById('detail-view').style.display = 'none';
+            document.getElementById('gallery-view').style.display = 'block';
+        }
+
+        loadGallery();
+    </script>
+</body>
+</html>
