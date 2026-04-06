@@ -1,0 +1,98 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  scroll-behavior: smooth;
+}
+
+/* Navbar */
+.custom-nav {
+  background-color: #0d6efd;
+}
+
+/* HERO SECTION */
+.hero {
+  min-height: 100vh;
+  background-color: #0d6efd;
+  color: #fff;
+  padding-top: 80px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero h1 {
+  margin-bottom: 15px;
+}
+
+.hero p {
+  color: #e0e0e0;
+  margin-bottom: 25px;
+}
+
+/* Solid Button */
+.btn-solid {
+  background-color: #ffc107;
+  color: #0d6efd;
+  border: none;
+  transition: 0.3s;
+}
+
+.btn-solid:hover {
+  background-color: #e0b800;
+  transform: scale(1.05);
+}
+
+/* Features Section */
+.features-section {
+  background-color: #f8f9ff;
+}
+
+/* Glass Cards */
+.feature-card {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 15px;
+  padding: 30px 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.feature-card h4 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.feature-card p {
+  color: #666;
+}
+
+/* Contact */
+.contact-section {
+  background-color: #eef2f3;
+}
+
+/* Footer */
+.footer {
+  background-color: #222;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+}
